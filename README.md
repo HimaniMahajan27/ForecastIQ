@@ -1,164 +1,285 @@
-# 🔮 ForecastIQ — AI Predictive Forecasting Platform
-
 <div align="center">
 
-![ForecastIQ Banner](https://img.shields.io/badge/ForecastIQ-AI%20Forecasting%20Platform-6366f1?style=for-the-badge&logo=chart-line&logoColor=white)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=ForecastIQ&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=AI%20Predictive%20Forecasting%20Platform&descAlignY=60&descSize=20" width="100%"/>
 
-**Upload any time-series CSV and instantly get Prophet-powered forecasts, rolling z-score anomaly detection, and Gemini-driven scenario analysis — all explained in plain English. No data science required.**
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=22&pause=1000&color=6366F1&center=true&vCenter=true&multiline=true&repeat=true&width=800&height=80&lines=Upload+CSV+%E2%86%92+Get+AI+Forecasts+in+seconds+%F0%9F%9A%80;No+data+science+needed.+Just+results.+%F0%9F%8E%AF;Predict+%7C+Detect+%7C+Scenario+Plan+%E2%9C%A8" alt="Typing SVG" /></a>
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org)
-[![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![Prophet](https://img.shields.io/badge/Prophet-1.1.5-0052CC?style=flat-square&logo=facebook&logoColor=white)](https://facebook.github.io/prophet)
-[![Gemini](https://img.shields.io/badge/Gemini-1.5%20Flash-4285F4?style=flat-square&logo=google&logoColor=white)](https://aistudio.google.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![License](https://img.shields.io/badge/License-Apache%202.0-green?style=flat-square)](LICENSE)
+<br/>
+
+[![Python](https://img.shields.io/badge/Python_3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![Flask](https://img.shields.io/badge/Flask_3.0-FF6B6B?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![Prophet](https://img.shields.io/badge/Prophet-0052CC?style=for-the-badge&logo=facebook&logoColor=white)](https://facebook.github.io/prophet)
+[![Gemini](https://img.shields.io/badge/Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
+
+<br/>
+
+[![Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](LICENSE)
+[![NatWest Hackathon](https://img.shields.io/badge/NatWest-Code_for_Purpose_2026-purple?style=flat-square)](https://github.com/HimaniMahajan27/ForecastIQ)
+[![Status](https://img.shields.io/badge/Status-Live_&_Working-brightgreen?style=flat-square)]()
 
 </div>
 
 ---
 
-## 📖 Overview
+<div align="center">
 
-**ForecastIQ** transforms raw historical data into actionable forecasts — without requiring any data science expertise.
+### 💀 Tired of staring at spreadsheets and *hoping* for the best?
 
-> 🎯 **What it does:** Accepts any time-series CSV and generates 4-week forecasts, detects anomalies, and models business scenarios using AI.
->
-> 🧩 **What problem it solves:** Most teams rely only on past data and lack accessible, transparent forecasting tools. ForecastIQ bridges that gap with honest, uncertainty-aware predictions explained in plain English.
->
-> 👥 **Who it's for:** Business analysts, operations teams, product managers, and non-technical decision-makers who need reliable forecasting without writing a single line of code.
+**ForecastIQ doesn't do hope. It does data.**
+
+Drop any CSV. Get instant AI forecasts, anomaly alerts, and scenario simulations — explained in plain English. Zero ML knowledge needed. Zero excuses for bad decisions.
+
+> *"Stop guessing. Start forecasting."*
+
+</div>
 
 ---
 
-## ✨ Features
+## 🧠 What Even Is This?
 
-> All features listed below are **implemented and working** in the current codebase.
+<table>
+<tr>
+<td width="33%" align="center">
 
-- 📈 **4-Week Prophet Forecast** — Facebook Prophet model generates weekly predictions with full confidence bands (p10/p50/p90)
-- 🎯 **Uncertainty Ranges** — Every forecast includes Low / Likely / High bounds so users understand risk, not just a single number
-- 📊 **Baseline Comparison** — Moving average baseline runs alongside Prophet to prevent overfitting and validate results
-- 🚨 **Anomaly Detection** — Rolling z-score algorithm flags unexpected spikes and dips with HIGH / MEDIUM severity labels
-- 🤖 **AI Plain-English Insights** — Google Gemini 1.5 Flash explains every forecast and anomaly in non-technical language
-- 💬 **Scenario Chat Interface** — Multi-turn conversational AI lets users ask "What if demand drops 15%?" and get modelled responses
-- 📂 **CSV Upload with Auto-Detection** — Drag-and-drop upload with automatic date/value column detection and validation
-- 🧪 **Demo Mode** — Pre-loaded 52-week synthetic sales dataset so the app works instantly with no setup
-- 🔁 **Graceful AI Fallback** — If Gemini API is unavailable, the app falls back to rule-based text — forecasting always works
-- 🔒 **No API Keys Required to Run** — Prophet and anomaly detection run fully locally; Gemini is optional
+### 🎯 What It Does
+Accepts any time-series CSV → runs Facebook Prophet → returns 4-week forecasts with full confidence bands, anomaly flags, and Gemini AI explanations. All in one click.
+
+</td>
+<td width="33%" align="center">
+
+### 🔥 The Problem It Solves
+Most teams are making million-dollar decisions by eyeballing last month's chart. That's insane. ForecastIQ gives you honest, uncertainty-aware predictions — not vibes.
+
+</td>
+<td width="33%" align="center">
+
+### 👥 Who It's For
+Business analysts, ops teams, PMs, founders — anyone who needs real forecasting power without a data science PhD or a $50k tool license.
+
+</td>
+</tr>
+</table>
+
+---
+
+## ✨ Features That Actually Work
+
+> 🟢 Everything below is **live and functional** in the current codebase. No fake features. No cope.
+
+<table>
+<tr>
+<th>🚀 Feature</th>
+<th>💡 What It Does</th>
+</tr>
+<tr>
+<td>📈 <b>4-Week Prophet Forecast</b></td>
+<td>Facebook Prophet generates weekly predictions with p10 / p50 / p90 confidence bands</td>
+</tr>
+<tr>
+<td>🎯 <b>Uncertainty Ranges</b></td>
+<td>Low / Likely / High bounds on every forecast — because single numbers are a lie</td>
+</tr>
+<tr>
+<td>📊 <b>Baseline Comparison</b></td>
+<td>Moving average runs alongside Prophet to catch overfitting before it embarrasses you</td>
+</tr>
+<tr>
+<td>🚨 <b>Anomaly Detection</b></td>
+<td>Rolling z-score algorithm flags spikes and dips with HIGH / MEDIUM severity + root cause</td>
+</tr>
+<tr>
+<td>🤖 <b>Gemini AI Insights</b></td>
+<td>Every forecast explained in plain English by Google Gemini 1.5 Flash — no jargon</td>
+</tr>
+<tr>
+<td>💬 <b>Scenario Chat</b></td>
+<td>Ask "What if demand drops 15%?" and get a fully modelled response with numbers</td>
+</tr>
+<tr>
+<td>📂 <b>Smart CSV Upload</b></td>
+<td>Drag-and-drop with auto column detection — it figures out your date/value columns itself</td>
+</tr>
+<tr>
+<td>🧪 <b>Instant Demo Mode</b></td>
+<td>52-week synthetic dataset pre-loaded — zero setup, works immediately</td>
+</tr>
+<tr>
+<td>🔁 <b>Graceful AI Fallback</b></td>
+<td>No Gemini key? No problem. Rule-based insights kick in automatically</td>
+</tr>
+<tr>
+<td>🔒 <b>Runs 100% Locally</b></td>
+<td>Prophet + anomaly detection = zero API calls, zero data leaves your machine</td>
+</tr>
+</table>
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    USER BROWSER                          │
-│              Next.js 15 + React 19 + TypeScript          │
-│         [ Upload CSV ] → [ Forecast ] → [ Anomalies ]    │
-│                      ↕ Scenario Chat                     │
-└──────────────────────────┬──────────────────────────────┘
-                           │ HTTP / REST
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│                  FLASK BACKEND (Port 5000)               │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐  │
-│  │ /api/forecast│  │/api/anomalies│  │ /api/scenario │  │
-│  └──────┬──────┘  └──────┬───────┘  └───────┬───────┘  │
-│         │                │                   │           │
-│  ┌──────▼──────┐  ┌──────▼───────┐  ┌───────▼───────┐  │
-│  │   Prophet   │  │  Rolling     │  │    Gemini     │  │
-│  │   Service   │  │  Z-Score     │  │    AI API     │  │
-│  └─────────────┘  └──────────────┘  └───────────────┘  │
-│         │                                               │
-│  ┌──────▼──────────────────────────────────────────┐   │
-│  │         CSV Parser + Data Validation             │   │
-│  │              (Marshmallow + pandas)              │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
+╔═══════════════════════════════════════════════════════════════╗
+║                      🖥️  USER BROWSER                        ║
+║           Next.js 15 + React 19 + TypeScript                  ║
+║                                                               ║
+║    [ 📂 Upload CSV ] ──▶ [ 📈 Forecast ] ──▶ [ 🚨 Anomalies ] ║
+║                              ↕                                ║
+║                     [ 💬 Scenario Chat ]                      ║
+╚═══════════════════════════╦═══════════════════════════════════╝
+                            ║  HTTP / REST
+                            ▼
+╔═══════════════════════════════════════════════════════════════╗
+║                  ⚙️  FLASK BACKEND  (Port 5000)               ║
+║                                                               ║
+║  ┌──────────────┐   ┌───────────────┐   ┌────────────────┐   ║
+║  │ /api/forecast│   │/api/anomalies │   │ /api/scenario  │   ║
+║  └──────┬───────┘   └───────┬───────┘   └───────┬────────┘   ║
+║         │                   │                    │            ║
+║  ┌──────▼───────┐   ┌───────▼───────┐   ┌───────▼────────┐  ║
+║  │  🔮 Prophet  │   │  📉 Z-Score   │   │  🤖 Gemini AI  │  ║
+║  │   Service    │   │   Detection   │   │   Integration  │  ║
+║  └──────────────┘   └───────────────┘   └────────────────┘  ║
+║                              │                               ║
+║  ╔═══════════════════════════▼═══════════════════════════╗   ║
+║  ║       📋 CSV Parser + Data Validation                 ║   ║
+║  ║           (Marshmallow + pandas + numpy)              ║   ║
+║  ╚═══════════════════════════════════════════════════════╝   ║
+╚═══════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| 🖥️ Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS v4 |
-| 🧩 UI Components | shadcn/ui, Radix UI, Recharts |
-| ⚙️ Backend | Python 3.11+, Flask 3, Flask-CORS |
-| 🔮 Forecasting | Facebook Prophet (local, no API needed) |
-| 🚨 Anomaly Detection | Rolling z-score via pandas/numpy |
-| 🤖 AI Insights | Google Gemini 1.5 Flash |
-| ✅ Data Validation | Marshmallow (backend), TypeScript (frontend) |
+<table>
+<tr>
+<th>🏷️ Layer</th>
+<th>⚡ Technology</th>
+<th>🎯 Why We Chose It</th>
+</tr>
+<tr>
+<td>🖥️ <b>Frontend</b></td>
+<td>Next.js 15, React 19, TypeScript, Tailwind CSS v4</td>
+<td>Server components + type safety = fewer bugs at 2am</td>
+</tr>
+<tr>
+<td>🧩 <b>UI Components</b></td>
+<td>shadcn/ui, Radix UI, Recharts</td>
+<td>Accessible, composable, looks clean without fighting CSS</td>
+</tr>
+<tr>
+<td>⚙️ <b>Backend</b></td>
+<td>Python 3.11+, Flask 3, Flask-CORS</td>
+<td>Lightweight API layer — no overhead, just endpoints</td>
+</tr>
+<tr>
+<td>🔮 <b>Forecasting</b></td>
+<td>Facebook Prophet (runs locally)</td>
+<td>Handles seasonality and trend out of the box, no tuning needed</td>
+</tr>
+<tr>
+<td>🚨 <b>Anomaly Detection</b></td>
+<td>Rolling z-score via pandas/numpy</td>
+<td>Fast, interpretable, explainable to non-technical users</td>
+</tr>
+<tr>
+<td>🤖 <b>AI Insights</b></td>
+<td>Google Gemini 1.5 Flash + Groq fallback</td>
+<td>Free tier, fast responses, plain English output</td>
+</tr>
+<tr>
+<td>✅ <b>Validation</b></td>
+<td>Marshmallow (backend), TypeScript (frontend)</td>
+<td>Catch bad CSV data before it breaks the model</td>
+</tr>
+</table>
 
 ---
 
 ## 📁 Project Structure
 
 ```
-ForeCastIQ/
-├── 🖥️ frontend/                  # Next.js 15 application
-│   ├── app/
-│   │   ├── layout.tsx            # Root layout with fonts
-│   │   ├── page.tsx              # Landing page
-│   │   └── app/
-│   │       ├── layout.tsx        # App shell: DataProvider + Sidebar + MobileNav
-│   │       ├── page.tsx          # Forecast tab (Prophet results)
-│   │       ├── anomalies/        # Anomaly detection tab
-│   │       ├── scenario/         # Scenario chat tab
-│   │       └── upload/           # CSV upload page
-│   ├── components/
-│   │   ├── forecastiq/           # App-specific components
-│   │   │   ├── charts/           # ForecastChart, AnomalyChart, ScenarioChart
-│   │   │   ├── anomaly-card      # Per-anomaly explanation card
-│   │   │   ├── csv-upload        # Drag-and-drop CSV parser
-│   │   │   ├── data-summary      # Forecast data table
-│   │   │   ├── insight-card      # Gemini AI insight display
-│   │   │   ├── stat-card         # KPI metric cards
-│   │   │   └── scenario-chat     # Multi-turn chat interface
-│   │   ├── landing/              # Landing page sections
-│   │   └── ui/                   # shadcn/ui primitives
-│   ├── context/
-│   │   └── DataContext.tsx       # Global state: CSV data + all API results
-│   ├── lib/
-│   │   ├── api.ts                # All fetch calls to Flask backend
-│   │   ├── demo-data.ts          # Fallback demo data for UI previews
-│   │   └── utils.ts              # Tailwind class merger
+📦 ForeCastIQ/
+│
+├── 🖥️ frontend/                   # Next.js 15 application
+│   ├── 📂 app/
+│   │   ├── layout.tsx             # Root layout
+│   │   ├── page.tsx               # Landing page
+│   │   └── 📂 app/
+│   │       ├── page.tsx           # 📈 Forecast tab
+│   │       ├── anomalies/         # 🚨 Anomaly detection tab
+│   │       ├── scenario/          # 💬 Scenario chat tab
+│   │       └── upload/            # 📂 CSV upload page
+│   ├── 📂 components/
+│   │   ├── forecastiq/
+│   │   │   ├── charts/            # ForecastChart, AnomalyChart, ScenarioChart
+│   │   │   ├── anomaly-card       # Per-anomaly explanation cards
+│   │   │   ├── csv-upload         # Drag-and-drop CSV parser
+│   │   │   ├── insight-card       # Gemini AI insight display
+│   │   │   ├── stat-card          # KPI metric cards
+│   │   │   └── scenario-chat      # Multi-turn chat interface
+│   │   └── ui/                    # shadcn/ui primitives
+│   ├── 📂 context/
+│   │   └── DataContext.tsx        # Global state manager
+│   ├── 📂 lib/
+│   │   ├── api.ts                 # Flask API calls
+│   │   ├── demo-data.ts           # Fallback demo dataset
+│   │   └── utils.ts               # Tailwind helpers
 │   └── package.json
 │
-├── ⚙️ backend/                   # Flask Python application
-│   ├── app.py                    # Application factory + blueprint registration
-│   ├── config.py                 # Centralised env var loading
-│   ├── requirements.txt          # Python dependencies
-│   ├── routes/
-│   │   ├── forecast.py           # POST /api/forecast
-│   │   ├── anomalies.py          # POST /api/anomalies
-│   │   └── scenario.py           # POST /api/scenario
-│   ├── services/
-│   │   ├── prophet_service.py    # Facebook Prophet wrapper
-│   │   ├── anomaly_service.py    # Rolling z-score detection
-│   │   ├── baseline_service.py   # Moving average baseline
-│   │   └── gemini_service.py     # Google Gemini AI integration
-│   ├── utils/
-│   │   └── csv_parser.py         # CSV validation + pandas DataFrame builder
-│   ├── tests/                    # Pytest test suite
-│   └── .env.example              # Environment variable template
+├── ⚙️ backend/                    # Flask Python application
+│   ├── app.py                     # App factory + blueprints
+│   ├── config.py                  # Env var loader
+│   ├── requirements.txt           # Python deps
+│   ├── 📂 routes/
+│   │   ├── forecast.py            # POST /api/forecast
+│   │   ├── anomalies.py           # POST /api/anomalies
+│   │   └── scenario.py            # POST /api/scenario
+│   ├── 📂 services/
+│   │   ├── prophet_service.py     # 🔮 Prophet wrapper
+│   │   ├── anomaly_service.py     # 📉 Z-score detection
+│   │   ├── baseline_service.py    # 📊 Moving average
+│   │   └── gemini_service.py      # 🤖 Gemini integration
+│   ├── 📂 utils/
+│   │   └── csv_parser.py          # CSV validator
+│   ├── 📂 tests/                  # Pytest suite
+│   └── .env.example               # Env template (safe to commit)
 │
 └── 📄 README.md
 ```
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Get It Running
 
-### 📋 Prerequisites
+### 📋 Before You Start
 
-| Requirement | Version | Notes |
-|---|---|---|
-| 🟢 Node.js | 18+ | With npm or pnpm |
-| 🐍 Python | 3.11+ | Required for backend |
-| 🔑 Gemini API Key | Optional | Free at [aistudio.google.com](https://aistudio.google.com/app/apikey) |
+<table>
+<tr>
+<th>✅ Requirement</th>
+<th>📌 Version</th>
+<th>📝 Note</th>
+</tr>
+<tr>
+<td>🟢 Node.js</td>
+<td>18+</td>
+<td>With npm or pnpm</td>
+</tr>
+<tr>
+<td>🐍 Python</td>
+<td>3.11+</td>
+<td>Required for backend</td>
+</tr>
+<tr>
+<td>🔑 Gemini API Key</td>
+<td>Optional</td>
+<td>Free at <a href="https://aistudio.google.com/app/apikey">aistudio.google.com</a> — app works without it</td>
+</tr>
+</table>
 
-> 💡 **Note:** The app works without a Gemini key — AI insights fall back to rule-based text. Prophet forecasting and anomaly detection are **fully local**.
+> 💡 **No Gemini key?** Prophet forecasting and anomaly detection run **100% locally**. AI insights gracefully fall back to rule-based text.
 
 ---
 
@@ -167,27 +288,27 @@ ForeCastIQ/
 ```bash
 cd backend
 
-# Create and activate virtual environment
+# Virtual environment setup
 python -m venv venv
 source venv/bin/activate        # macOS/Linux
-# venv\Scripts\activate         # Windows
+venv\Scripts\activate           # Windows
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Configure environment variables
+# Set up environment
 cp .env.example .env
-# Edit .env and set your GEMINI_API_KEY
+# Add your GEMINI_API_KEY inside .env
 
-# Start the Flask backend
+# Fire it up 🔥
 python app.py
-# → Running on http://localhost:5000
+# ✅ Running on http://localhost:5000
 ```
 
-**✅ Verify backend is running:**
+**Verify it's alive:**
 ```bash
 curl http://localhost:5000/health
-# {"status": "ok", "version": "1.0.0"}
+# → {"status": "ok", "version": "1.0.0"}
 ```
 
 ---
@@ -200,43 +321,60 @@ cd frontend
 # Install dependencies
 npm install
 
-# Configure environment variables
+# Set up environment
 cp .env.local.example .env.local
-# Default value works if backend runs on port 5000
+# Default works if backend is on port 5000
 
-# Start the Next.js development server
+# Launch 🚀
 npm run dev
-# → Running on http://localhost:3000
+# ✅ Running on http://localhost:3000
 ```
 
-Open **http://localhost:3000** in your browser. 🎉
+Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 
 ---
 
-### 3️⃣ Using the App
+### 3️⃣ Using The App
 
-| Step | Action |
-|---|---|
-| 🏠 Landing Page | Click **"Get Started"** or navigate to `/app` |
-| 🧪 Demo Mode | App auto-loads `demo_sales.csv` — click **Run Analysis** on any tab |
-| 📂 Your Data | Go to `/app/upload`, drag a CSV, select columns, click **Use this data** |
-| 💬 Scenario Chat | Ask *"What if I run a 20% marketing push for 2 weeks?"* |
+<table>
+<tr>
+<th>📍 Where</th>
+<th>⚡ What To Do</th>
+</tr>
+<tr>
+<td>🏠 Landing Page</td>
+<td>Hit <b>"Get Started"</b> or go straight to <code>/app</code></td>
+</tr>
+<tr>
+<td>🧪 Demo Mode</td>
+<td>App loads <code>demo_sales.csv</code> automatically — click <b>Run Analysis</b> on any tab</td>
+</tr>
+<tr>
+<td>📂 Your Data</td>
+<td>Go to <code>/app/upload</code> → drag CSV → select columns → click <b>Use this data</b></td>
+</tr>
+<tr>
+<td>💬 Scenarios</td>
+<td>Ask <em>"What if I run a 20% marketing push for 2 weeks?"</em> on the Scenario tab</td>
+</tr>
+</table>
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Reference
 
-All endpoints live under `http://localhost:5000`
+> All endpoints at `http://localhost:5000`
 
-### `GET /health`
+<details>
+<summary><b>🟢 GET /health — Health Check</b></summary>
+
 ```json
 { "status": "ok", "version": "1.0.0" }
 ```
+</details>
 
----
-
-### `POST /api/forecast`
-> 🔮 Run a 4-week Prophet forecast with confidence bands
+<details>
+<summary><b>🔮 POST /api/forecast — Run Prophet Forecast</b></summary>
 
 **Request:**
 ```json
@@ -261,16 +399,15 @@ All endpoints live under `http://localhost:5000`
   }
 }
 ```
+</details>
 
----
-
-### `POST /api/anomalies`
-> 🚨 Detect anomalies using rolling z-score (±2σ threshold)
+<details>
+<summary><b>🚨 POST /api/anomalies — Detect Anomalies</b></summary>
 
 **Request:**
 ```json
 {
-  "data": [...],
+  "data": ["..."],
   "date_column": "date",
   "value_column": "value",
   "use_demo": false
@@ -288,11 +425,10 @@ All endpoints live under `http://localhost:5000`
   }
 }
 ```
+</details>
 
----
-
-### `POST /api/scenario`
-> 💬 Model a business scenario with Gemini AI
+<details>
+<summary><b>💬 POST /api/scenario — Model a Scenario</b></summary>
 
 **Request:**
 ```json
@@ -315,20 +451,39 @@ All endpoints live under `http://localhost:5000`
   }
 }
 ```
+</details>
 
 ---
 
-## 📄 CSV Format Requirements
+## 📄 CSV Format
 
-| Requirement | Details |
-|---|---|
-| 📁 Format | `.csv` with headers in first row |
-| 🔢 Minimum rows | 8 valid data points (after cleaning) |
-| 📅 Date column | Any parseable format (YYYY-MM-DD recommended) |
-| 💯 Value column | Numeric values (integers or decimals) |
-| 📆 Frequency | Weekly recommended; daily also works |
+<table>
+<tr>
+<th>📌 Requirement</th>
+<th>✅ Details</th>
+</tr>
+<tr>
+<td>📁 Format</td>
+<td><code>.csv</code> with headers in row 1</td>
+</tr>
+<tr>
+<td>🔢 Minimum rows</td>
+<td>8 valid data points after cleaning</td>
+</tr>
+<tr>
+<td>📅 Date column</td>
+<td>Any parseable format — <code>YYYY-MM-DD</code> recommended</td>
+</tr>
+<tr>
+<td>💯 Value column</td>
+<td>Integers or decimals — no text, no nulls</td>
+</tr>
+<tr>
+<td>📆 Frequency</td>
+<td>Weekly works best — daily also supported</td>
+</tr>
+</table>
 
-**Example CSV:**
 ```csv
 date,sales
 2023-01-02,3421
@@ -341,96 +496,150 @@ date,sales
 
 ## 🔐 Environment Variables
 
-### Backend (`backend/.env`)
+> ⚠️ **Never commit `.env`** — only `.env.example` goes to GitHub.
 
-| Variable | Required | Description |
-|---|---|---|
-| `GEMINI_API_KEY` | ⭐ Recommended | Google Gemini API key for AI insights |
-| `GEMINI_MODEL` | No | Model name (default: `gemini-2.0-flash`) |
-| `GROQ_API_KEY` | No | Groq fallback if Gemini fails |
-| `FLASK_ENV` | No | `development` or `production` |
-| `FLASK_SECRET_KEY` | ✅ Yes (prod) | Random secret string for Flask sessions |
-| `FRONTEND_URL` | No | Next.js URL for CORS (default: `http://localhost:3000`) |
+**Backend (`backend/.env`)**
 
-### Frontend (`frontend/.env.local`)
+<table>
+<tr>
+<th>🔑 Variable</th>
+<th>📌 Required</th>
+<th>📝 Description</th>
+</tr>
+<tr>
+<td><code>GEMINI_API_KEY</code></td>
+<td>⭐ Recommended</td>
+<td>Google Gemini key for AI insights</td>
+</tr>
+<tr>
+<td><code>GEMINI_MODEL</code></td>
+<td>No</td>
+<td>Default: <code>gemini-2.0-flash</code></td>
+</tr>
+<tr>
+<td><code>GROQ_API_KEY</code></td>
+<td>No</td>
+<td>Auto-fallback if Gemini fails</td>
+</tr>
+<tr>
+<td><code>FLASK_ENV</code></td>
+<td>No</td>
+<td><code>development</code> or <code>production</code></td>
+</tr>
+<tr>
+<td><code>FLASK_SECRET_KEY</code></td>
+<td>✅ Yes (prod)</td>
+<td>Strong random string for Flask sessions</td>
+</tr>
+<tr>
+<td><code>FRONTEND_URL</code></td>
+<td>No</td>
+<td>CORS origin (default: <code>http://localhost:3000</code>)</td>
+</tr>
+</table>
 
-| Variable | Required | Description |
-|---|---|---|
-| `NEXT_PUBLIC_API_URL` | No | Flask backend URL (default: `http://localhost:5000`) |
+**Frontend (`frontend/.env.local`)**
 
-> ⚠️ **Never commit your `.env` file.** Copy `.env.example` → `.env` and fill in your own keys locally.
+<table>
+<tr>
+<th>🔑 Variable</th>
+<th>📌 Required</th>
+<th>📝 Description</th>
+</tr>
+<tr>
+<td><code>NEXT_PUBLIC_API_URL</code></td>
+<td>No</td>
+<td>Flask URL (default: <code>http://localhost:5000</code>)</td>
+</tr>
+</table>
 
 ---
 
-## ⚠️ Limitations
+## ⚠️ Known Limitations
 
-> Honest description of current state — features below are **not yet fully implemented:**
+> Honest about what's not done — because integrity > hype.
 
-- 📊 **Scenario comparison chart** — scenario analysis currently returns text output; side-by-side visual chart comparison is not yet implemented
-- 📏 **Minimum data requirement** — datasets with fewer than 8 valid rows are not supported
-- ⏱️ **Data frequency** — hourly and sub-daily data are not currently supported; weekly and daily work best
-- 🪟 **Windows Prophet install** — `pip install prophet` may fail on Windows without Microsoft C++ Build Tools installed
-- 🌐 **No user accounts** — all data is session-based; there is no persistent storage or login system
+- 📊 **Scenario chart** — returns text analysis only; visual side-by-side chart not yet implemented
+- 📏 **Min data** — fewer than 8 valid rows will be rejected
+- ⏱️ **Frequency** — hourly / sub-daily data not supported yet
+- 🪟 **Windows Prophet** — may need [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) to install
+- 🌐 **No persistence** — session-based only, no user accounts or saved history
 
 ---
 
 ## 🐛 Troubleshooting
 
-### 🔴 Backend won't start
-| Error | Fix |
+<details>
+<summary><b>🔴 Backend won't start</b></summary>
+
+| ❌ Error | ✅ Fix |
 |---|---|
-| `ModuleNotFoundError: prophet` | Run `pip install prophet`. On Apple Silicon: `brew install cmake` first |
-| `ModuleNotFoundError: google.generativeai` | Run `pip install google-generativeai==0.7.2` |
+| `ModuleNotFoundError: prophet` | `pip install prophet` — on Apple Silicon: `brew install cmake` first |
+| `ModuleNotFoundError: google.generativeai` | `pip install google-generativeai==0.7.2` |
 | Port 5000 in use | Change `port=5000` in `app.py` and update `NEXT_PUBLIC_API_URL` |
 
-### 🟡 Frontend errors
-| Error | Fix |
+</details>
+
+<details>
+<summary><b>🟡 Frontend errors</b></summary>
+
+| ❌ Error | ✅ Fix |
 |---|---|
 | `Cannot find module '@/context/DataContext'` | Ensure `frontend/context/DataContext.tsx` exists |
-| `Network Error` / CORS error | Check `FRONTEND_URL` in `backend/.env` matches your Next.js URL exactly |
+| `Network Error` / CORS in console | Check `FRONTEND_URL` in `backend/.env` exactly matches Next.js URL + port |
 
-### 🟠 API returns `{ success: false }`
-| Message | Fix |
+</details>
+
+<details>
+<summary><b>🟠 API returns success: false</b></summary>
+
+| ❌ Message | ✅ Fix |
 |---|---|
-| `"Only N valid rows found"` | CSV has fewer than 8 clean rows — check for blanks or bad dates |
-| `"Date column 'X' not found"` | Use the Upload page column selector to pick correct columns |
-| Gemini errors | App falls back to rule-based text — set `GEMINI_API_KEY` for full AI |
+| `"Only N valid rows found"` | CSV has fewer than 8 clean rows — check blanks, bad dates |
+| `"Date column 'X' not found"` | Use the Upload column selector to pick the right columns |
+| Gemini errors | Falls back to rule-based text automatically — set `GEMINI_API_KEY` for full AI |
+
+</details>
 
 ---
 
-## 🚢 Production Deployment
+## 🚢 Production Deploy
 
 ```bash
-# Backend — use gunicorn
+# 🐍 Backend — swap Flask dev server for gunicorn
 pip install gunicorn
 gunicorn -w 2 -b 0.0.0.0:5000 app:app
 
-# Frontend — build and serve
+# 🖥️ Frontend — static build
 npm run build
 npm start
 ```
 
-> 🔒 Update `FRONTEND_URL` in `backend/.env` to your production domain and generate a strong `FLASK_SECRET_KEY`.
+> 🔒 Set `FRONTEND_URL` to your prod domain. Generate a strong `FLASK_SECRET_KEY`. Never ship `.env`.
 
 ---
 
-## 🔭 Future Improvements
+## 🔭 What's Next
 
-> Features we would add with more time:
+> If we had more time, here's what's coming:
 
 - 📊 Visual side-by-side scenario comparison charts
-- 📅 Support for monthly and hourly data frequencies
+- 📅 Monthly + hourly data frequency support
 - 👤 User accounts with saved forecast history
-- 📧 Email alerts for detected anomalies
-- 🌍 Multi-dataset comparison across regions or products
+- 📧 Real-time anomaly email/Slack alerts
+- 🌍 Multi-dataset comparison across regions
 
 ---
 
 <div align="center">
 
-**Built for NatWest Code for Purpose — India Hackathon 2026**
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=120&section=footer&animation=twinkling" width="100%"/>
 
-![Made with ❤️](https://img.shields.io/badge/Made%20with-❤️-red?style=flat-square)
-![Hackathon](https://img.shields.io/badge/NatWest-Code%20for%20Purpose-6366f1?style=flat-square)
+**Built with 🔥 for NatWest Code for Purpose — India Hackathon 2026**
+
+[![Made with Love](https://img.shields.io/badge/Made_with-❤️_in_India-FF6B6B?style=for-the-badge)](https://github.com/HimaniMahajan27/ForecastIQ)
+[![NatWest](https://img.shields.io/badge/NatWest-Code_for_Purpose-6366f1?style=for-the-badge)](https://github.com/HimaniMahajan27/ForecastIQ)
+
+*Stop looking backwards. Start forecasting forward.* 🚀
 
 </div>
