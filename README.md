@@ -16,6 +16,7 @@
 <br/>
 
 [![Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](LICENSE)
+[![DCO](https://img.shields.io/badge/DCO-signed--off-22c55e?style=flat-square)](https://developercertificate.org/)
 [![NatWest Hackathon](https://img.shields.io/badge/NatWest-Code_for_Purpose_2026-purple?style=flat-square)](https://github.com/HimaniMahajan27/ForecastIQ)
 [![Status](https://img.shields.io/badge/Status-Live_&_Working-brightgreen?style=flat-square)]()
 
@@ -37,7 +38,7 @@ Drop any CSV. Get instant AI forecasts, anomaly alerts, and scenario simulations
 
 ---
 
-## 🧠 What Even Is This?
+## 🧠 Overview
 
 <table>
 <tr>
@@ -50,7 +51,7 @@ Accepts any time-series CSV → runs Facebook Prophet → returns 4-week forecas
 <td width="33%" align="center">
 
 ### 🔥 The Problem It Solves
-Most teams are making million-dollar decisions by eyeballing last month's chart. That's insane. ForecastIQ gives you honest, uncertainty-aware predictions — not vibes.
+Most teams make million-dollar decisions by eyeballing last month's chart. That's insane. ForecastIQ gives you honest, uncertainty-aware predictions — not vibes.
 
 </td>
 <td width="33%" align="center">
@@ -86,12 +87,20 @@ Business analysts, ops teams, PMs, founders — anyone who needs real forecastin
 <td>Moving average runs alongside Prophet to catch overfitting before it embarrasses you</td>
 </tr>
 <tr>
+<td>🔁 <b>Local Model Fallback</b></td>
+<td>When Prophet is unavailable, the best local model (Naive, Holt, Holt-Winters, Moving Avg) is auto-selected by holdout MAE</td>
+</tr>
+<tr>
+<td>🔍 <b>Outlier-Cleaned Comparison</b></td>
+<td>Re-runs forecast with statistical outliers removed for a side-by-side contrast</td>
+</tr>
+<tr>
 <td>🚨 <b>Anomaly Detection</b></td>
 <td>Rolling z-score algorithm flags spikes and dips with HIGH / MEDIUM severity + root cause</td>
 </tr>
 <tr>
 <td>🤖 <b>Gemini AI Insights</b></td>
-<td>Every forecast explained in plain English by Google Gemini 1.5 Flash — no jargon</td>
+<td>Every forecast explained in plain English by Google Gemini 2.0 Flash — no jargon</td>
 </tr>
 <tr>
 <td>💬 <b>Scenario Chat</b></td>
@@ -106,8 +115,12 @@ Business analysts, ops teams, PMs, founders — anyone who needs real forecastin
 <td>52-week synthetic dataset pre-loaded — zero setup, works immediately</td>
 </tr>
 <tr>
-<td>🔁 <b>Graceful AI Fallback</b></td>
-<td>No Gemini key? No problem. Rule-based insights kick in automatically</td>
+<td>🔭 <b>Transparency Panel</b></td>
+<td>Every forecast exposes which model was used and its MAE score on holdout data</td>
+</tr>
+<tr>
+<td>🔄 <b>Graceful AI Fallback</b></td>
+<td>No Gemini key? Groq kicks in. No Groq key? Rule-based insights fire automatically — the app never fails silently</td>
 </tr>
 <tr>
 <td>🔒 <b>Runs 100% Locally</b></td>
@@ -115,38 +128,333 @@ Business analysts, ops teams, PMs, founders — anyone who needs real forecastin
 </tr>
 </table>
 
+> **Partial implementation note:** The voice input button (`VoiceButton` component) renders in the Scenario tab UI, but speech-to-text transcription is not yet wired to the chat input. It is a UI placeholder only.
+
 ---
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    A([🌐 User Browser\nNext.js 15 · React 19 · TypeScript]) --> B
+
+    B["📂 Upload CSV\nor use Demo Data"]
+    B --> C["🔍 csv_parser.py\nValidate · Parse Dates · Coerce Types · Drop Nulls"]
+    C --> D{8+ valid rows?}
+    D -- ❌ No --> ERR([🚫 Error returned to user])
+    D -- ✅ Yes --> E
+
+    E["lib/api.ts\nHTTP / REST"]
+    E --> F
+
+    subgraph FLASK["⚙️ Flask Backend — Port 5000"]
+        F["POST /api/forecast\nPOST /api/anomalies\nPOST /api/scenario\nGET  /health"]
+        F --> G["🔮 Prophet Service\nAuto-detect seasonality\nyhat ± confidence bands"]
+        F --> H["🔁 Local Models Service\nNaive · Holt · Holt-Winters\nSelected by holdout MAE"]
+        F --> I["📉 Anomaly Service\nRolling Z-Score\nHIGH / MEDIUM severity"]
+        F --> J["💬 Scenario Engine\nDeterministic rule-based\n% change · trend · flatten"]
+        G --> K["📏 Baseline Service\n4-week moving average"]
+        H --> K
+        K --> L["🤖 Gemini Service\nAI Insight Generation"]
+    end
+
+    L --> M{AI key available?}
+    M -- Gemini ✅ --> N([✨ Gemini 2.0 Flash\nRich AI explanation])
+    M -- Groq ✅ --> O([⚡ Groq Llama 3.1\nFast AI explanation])
+    M -- None --> P([📝 Rule-based text\nAlways succeeds])
+
+    N --> Q
+    O --> Q
+    P --> Q
+    I --> Q
+    J --> Q
+
+    Q([✅ JSON Response\nhistorical · forecast · anomalies · insight · transparency])
+    Q --> A
+
+    style A fill:#1e293b,color:#94a3b8
+    style ERR fill:#7f1d1d,color:#fca5a5
+    style Q fill:#14532d,color:#86efac
+    style FLASK fill:#0f172a,color:#93c5fd
+    style N fill:#14532d,color:#86efac
+    style O fill:#1a3a2a,color:#86efac
+    style P fill:#1e3a5f,color:#93c5fd
+```
+
+---
+
+## 📊 Data Flow Diagrams
+
+### 1 · Forecast Pipeline
+
+```mermaid
+flowchart TD
+    A([📂 CSV upload / demo data]) --> B
+
+    B["🔍 csv_parser.py
+    Validate columns · parse dates
+    coerce values · drop nulls"]
+    B --> C{8+ valid rows?}
+
+    C -- ❌ No --> ERR([🚫 Error returned to user])
+    C -- ✅ Yes --> D["⚡ Try Prophet"]
+
+    D --> E{Fit succeeds?}
+
+    E -- ✅ Yes --> G["📈 prophet_service
+    Auto-detect seasonality
+    Predict N weeks ahead
+    yhat ± confidence bands"]
+
+    E -- ❌ No --> F["🔁 local_models_service
+    Train: Naive · Seasonal Naive
+    Moving Avg · Holt · Holt-Winters
+    Select winner by holdout MAE"]
+
+    F --> H
+    G --> H
+
+    H["📏 baseline_service
+    4-week moving average
+    appended to every data point"]
+
+    H --> I["🤖 gemini_service
+    1 · Try Gemini 2.0 Flash
+    2 · Try Groq Llama 3.1
+    3 · Rule-based static text"]
+
+    I --> J([✅ JSON response
+    historical · forecast · summary
+    insight · transparency])
+
+    style A fill:#1e293b,color:#94a3b8
+    style ERR fill:#7f1d1d,color:#fca5a5
+    style J fill:#14532d,color:#86efac
+    style G fill:#1e3a5f,color:#93c5fd
+    style F fill:#2d1b69,color:#c4b5fd
+```
+
+---
+
+### 2 · Anomaly Detection Pipeline
+
+```mermaid
+flowchart TD
+    A([📊 Time-series DataFrame]) --> B
+
+    B["🔄 Shift rolling window by 1
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Prevents look-ahead bias —
+    only past data scores current point"]
+
+    B --> C["📐 Rolling mean + std
+    window = 8 weeks · min_periods = 2"]
+
+    C --> D["🧮 Z-score = (value − mean) / std
+    Replace std = 0 with 1e-8 to avoid ÷0"]
+
+    D --> E{│z-score│ threshold?}
+
+    E -- "│z│ ≥ 3.0" --> F(["🔴 HIGH severity"])
+    E -- "│z│ ≥ 2.5" --> G(["🟡 MEDIUM severity"])
+    E -- "│z│ < 2.5" --> H(["🟢 Normal — no flag"])
+
+    F --> I
+    G --> I
+
+    I["🤖 gemini_service
+    ──────────────────────────
+    Generate likely cause
+    Suggest next action"]
+
+    I --> J(["📋 chart_data · anomalies list
+    stats: total · high · medium"])
+
+    style A fill:#1e293b,color:#94a3b8
+    style F fill:#7f1d1d,color:#fca5a5
+    style G fill:#713f12,color:#fde68a
+    style H fill:#14532d,color:#86efac
+    style J fill:#14532d,color:#86efac
+```
+
+---
+
+### 3 · AI Fallback Chain
+
+```mermaid
+flowchart TD
+    A(["🚀 AI explanation requested"]) --> B
+
+    B{"🔑 GEMINI_API_KEY set?"}
+
+    B -- Yes --> C["📡 Call Gemini 2.0 Flash\n(1M token context, free tier)"]
+    B -- No  --> F
+
+    C --> D{"Response OK?\n< 30s · valid JSON"}
+    D -- ✅ Yes --> OK1(["✨ Return Gemini explanation\n(Rich, contextual, nuanced)"])
+    D -- ❌ No  --> F
+
+    F{"🔑 GROQ_API_KEY set?"}
+    F -- Yes --> G["⚡ Call Groq · Llama 3.1 8B Instant\n(Sub-second latency, free tier)"]
+    F -- No  --> J
+
+    G --> H{"Response OK?"}
+    H -- ✅ Yes --> OK2(["✨ Return Groq explanation\n(Fast, capable fallback)"])
+    H -- ❌ No  --> J
+
+    J["📝 Rule-based static text
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Built from: trend % · peak week
+    confidence range · vs baseline
+    Always deterministic · never throws"]
+
+    J --> OK3(["✅ Return rule-based text\nAlways succeeds · zero dependencies"])
+
+    style A fill:#1e293b,color:#94a3b8
+    style OK1 fill:#14532d,color:#86efac
+    style OK2 fill:#1a3a2a,color:#86efac
+    style OK3 fill:#1e3a5f,color:#93c5fd
+    style J fill:#1e3a5f,color:#93c5fd
+```
+
+---
+
+### 4 · Scenario Engine
+
+```mermaid
+flowchart TD
+    A(["💬 User types scenario question"]) --> B
+
+    B["🧠 NLP Intent Parser
+    ━━━━━━━━━━━━━━━━━━━━━
+    Extract: intent · magnitude · duration"]
+
+    B --> C{Intent type?}
+
+    C -- "% change\ne.g. '+20% for 2 weeks'" --> D["📊 Percentage Modifier
+    Apply multiplier to baseline forecast
+    for specified duration"]
+
+    C -- "Trend continuation\ne.g. 'continue current trend'" --> E["📈 Trend Extrapolator
+    Extend Prophet slope
+    for N more periods"]
+
+    C -- "Flatten\ne.g. 'what if growth stalls'" --> F["➡️ Flatline Engine
+    Hold last known value
+    constant for N periods"]
+
+    C -- "Outlier removal\ne.g. 'without that spike'" --> G["🧹 Outlier Stripper
+    Remove z > 2.5 points
+    Rerun baseline calculation"]
+
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+
+    H["📐 Deterministic numeric result
+    scenario_data · delta · weeks affected"]
+
+    H --> I["🤖 gemini_service
+    Wrap result in plain English
+    Add projected delta + context"]
+
+    I --> J(["📋 JSON: scenario_data
+    baseline · scenario · summary · delta"])
+
+    style A fill:#1e293b,color:#94a3b8
+    style J fill:#14532d,color:#86efac
+    style H fill:#2d1b69,color:#c4b5fd
+```
+
+---
+
+## 🔬 Prophet Model — How It Works
+
+Prophet decomposes a time series into three interpretable components:
 
 ```
-╔═══════════════════════════════════════════════════════════════╗
-║                      🖥️  USER BROWSER                        ║
-║           Next.js 15 + React 19 + TypeScript                  ║
-║                                                               ║
-║    [ 📂 Upload CSV ] ──▶ [ 📈 Forecast ] ──▶ [ 🚨 Anomalies ] ║
-║                              ↕                                ║
-║                     [ 💬 Scenario Chat ]                      ║
-╚═══════════════════════════╦═══════════════════════════════════╝
-                            ║  HTTP / REST
-                            ▼
-╔═══════════════════════════════════════════════════════════════╗
-║                  ⚙️  FLASK BACKEND  (Port 5000)               ║
-║                                                               ║
-║  ┌──────────────┐   ┌───────────────┐   ┌────────────────┐   ║
-║  │ /api/forecast│   │/api/anomalies │   │ /api/scenario  │   ║
-║  └──────┬───────┘   └───────┬───────┘   └───────┬────────┘   ║
-║         │                   │                    │            ║
-║  ┌──────▼───────┐   ┌───────▼───────┐   ┌───────▼────────┐  ║
-║  │  🔮 Prophet  │   │  📉 Z-Score   │   │  🤖 Gemini AI  │  ║
-║  │   Service    │   │   Detection   │   │   Integration  │  ║
-║  └──────────────┘   └───────────────┘   └────────────────┘  ║
-║                              │                               ║
-║  ╔═══════════════════════════▼═══════════════════════════╗   ║
-║  ║       📋 CSV Parser + Data Validation                 ║   ║
-║  ║           (Marshmallow + pandas + numpy)              ║   ║
-║  ╚═══════════════════════════════════════════════════════╝   ║
-╚═══════════════════════════════════════════════════════════════╝
+y(t) = trend(t) + seasonality(t) + holidays(t) + ε(t)
+```
+
+**Why Prophet over a neural network?**
+
+| Property | Prophet | LSTM / Transformer |
+|---|---|---|
+| **Interpretability** | ✅ Additive components, explainable | ❌ Black box |
+| **Training time** | ✅ < 1 second on short series | ❌ Minutes–hours |
+| **Data requirement** | ✅ Works with 50+ rows | ❌ Needs thousands |
+| **Uncertainty bands** | ✅ Built-in credible intervals | ⚠️ Requires extra work |
+| **Seasonality** | ✅ Auto-detected | ❌ Must be engineered |
+| **Maintenance** | ✅ No GPU, no retraining pipeline | ❌ Complex MLOps |
+
+Prophet returns three columns for every future date:
+
+```
+yhat_lower  ─── Lower bound of 80% credible interval
+yhat        ─── Most likely predicted value
+yhat_upper  ─── Upper bound of 80% credible interval
+```
+
+The wider the band, the less certain the model is — that uncertainty is real information, not error.
+
+---
+
+## 🚨 Anomaly Detection — How Z-Score Works
+
+For each point `t`, the algorithm:
+1. Takes the **previous** 8 data points (shifted by 1 to avoid look-ahead bias)
+2. Computes rolling mean `μ` and rolling standard deviation `σ`
+3. Computes `z = (value - μ) / σ`
+
+| Z-Score | Severity | Meaning |
+|---|---|---|
+| `│z│ ≥ 3.0` | 🔴 **HIGH** | < 0.3% probability under a normal distribution — very rare |
+| `│z│ ≥ 2.5` | 🟡 **MEDIUM** | < 1.2% — worth investigating |
+| `│z│ < 2.5` | 🟢 **Normal** | Within expected range — no flag |
+
+**Why shift the window?**
+```
+Without shift (❌ look-ahead bias):
+  Window for point T: [T-7, T-6, T-5, T-4, T-3, T-2, T-1, T]
+  Problem: The current point T influences its own baseline → anomalies hide themselves
+
+With shift (✅ correct):
+  Window for point T: [T-8, T-7, T-6, T-5, T-4, T-3, T-2, T-1]
+  Baseline for T is built from only past points → fair comparison
+```
+
+---
+
+## 🔁 Local Model Fallback Selection
+
+When Prophet is unavailable, ForecastIQ trains and evaluates five local models and selects the winner by holdout MAE:
+
+```mermaid
+flowchart TD
+    A(["Prophet failed / unavailable"]) --> B
+
+    B["Split data: 80% train · 20% holdout"]
+
+    B --> M1["📊 Naive Model\nForecast = last observed value\nfor all future periods"]
+    B --> M2["📅 Seasonal Naive\nForecast = value from same\nperiod last season"]
+    B --> M3["〰️ Moving Average\n4-week rolling mean\nof recent history"]
+    B --> M4["📈 Holt (Double Exp. Smoothing)\nModels level + trend\nα and β tuned by MLE"]
+    B --> M5["🌊 Holt-Winters (Triple Exp.)\nModels level + trend + seasonality\nAdditive or multiplicative"]
+
+    M1 --> E["📐 Evaluate each on holdout\nMetric: MAE (Mean Absolute Error)"]
+    M2 --> E
+    M3 --> E
+    M4 --> E
+    M5 --> E
+
+    E --> W{"Select winner:\nlowest holdout MAE"}
+
+    W --> R(["✅ Use winning model\nfor full forecast\nReport MAE in transparency panel"])
+
+    style A fill:#7f1d1d,color:#fca5a5
+    style R fill:#14532d,color:#86efac
+    style W fill:#1e3a5f,color:#93c5fd
 ```
 
 ---
@@ -175,24 +483,39 @@ Business analysts, ops teams, PMs, founders — anyone who needs real forecastin
 <td>Lightweight API layer — no overhead, just endpoints</td>
 </tr>
 <tr>
-<td>🔮 <b>Forecasting</b></td>
-<td>Facebook Prophet (runs locally)</td>
-<td>Handles seasonality and trend out of the box, no tuning needed</td>
+<td>🔮 <b>Primary Forecasting</b></td>
+<td>Facebook Prophet 1.1.5 (runs locally)</td>
+<td>Handles seasonality and trend out of the box; trains in &lt; 1s on short series</td>
+</tr>
+<tr>
+<td>🔁 <b>Fallback Forecasting</b></td>
+<td>statsmodels (Naive, Holt, Holt-Winters)</td>
+<td>No external API; winner selected by holdout MAE</td>
 </tr>
 <tr>
 <td>🚨 <b>Anomaly Detection</b></td>
-<td>Rolling z-score via pandas/numpy</td>
+<td>Rolling z-score via pandas / numpy</td>
 <td>Fast, interpretable, explainable to non-technical users</td>
 </tr>
 <tr>
-<td>🤖 <b>AI Insights</b></td>
-<td>Google Gemini 1.5 Flash + Groq fallback</td>
-<td>Free tier, fast responses, plain English output</td>
+<td>🤖 <b>Primary AI</b></td>
+<td>Google Gemini 2.0 Flash</td>
+<td>Free tier, 1M token context, fast inference</td>
+</tr>
+<tr>
+<td>🔄 <b>AI Fallback</b></td>
+<td>Groq (Llama 3.1 8B Instant)</td>
+<td>Sub-second latency; free tier; auto-triggers if Gemini fails</td>
 </tr>
 <tr>
 <td>✅ <b>Validation</b></td>
 <td>Marshmallow (backend), TypeScript (frontend)</td>
 <td>Catch bad CSV data before it breaks the model</td>
+</tr>
+<tr>
+<td>🧪 <b>Testing</b></td>
+<td>Pytest</td>
+<td>Standard Python testing; meaningful coverage on core services</td>
 </tr>
 </table>
 
@@ -201,60 +524,91 @@ Business analysts, ops teams, PMs, founders — anyone who needs real forecastin
 ## 📁 Project Structure
 
 ```
-📦 ForeCastIQ/
-│
-├── 🖥️ frontend/                   # Next.js 15 application
-│   ├── 📂 app/
-│   │   ├── layout.tsx             # Root layout
-│   │   ├── page.tsx               # Landing page
-│   │   └── 📂 app/
-│   │       ├── page.tsx           # 📈 Forecast tab
-│   │       ├── anomalies/         # 🚨 Anomaly detection tab
-│   │       ├── scenario/          # 💬 Scenario chat tab
-│   │       └── upload/            # 📂 CSV upload page
-│   ├── 📂 components/
-│   │   ├── forecastiq/
-│   │   │   ├── charts/            # ForecastChart, AnomalyChart, ScenarioChart
-│   │   │   ├── anomaly-card       # Per-anomaly explanation cards
-│   │   │   ├── csv-upload         # Drag-and-drop CSV parser
-│   │   │   ├── insight-card       # Gemini AI insight display
-│   │   │   ├── stat-card          # KPI metric cards
-│   │   │   └── scenario-chat      # Multi-turn chat interface
-│   │   └── ui/                    # shadcn/ui primitives
-│   ├── 📂 context/
-│   │   └── DataContext.tsx        # Global state manager
-│   ├── 📂 lib/
-│   │   ├── api.ts                 # Flask API calls
-│   │   ├── demo-data.ts           # Fallback demo dataset
-│   │   └── utils.ts               # Tailwind helpers
-│   └── package.json
-│
-├── ⚙️ backend/                    # Flask Python application
-│   ├── app.py                     # App factory + blueprints
-│   ├── config.py                  # Env var loader
-│   ├── requirements.txt           # Python deps
-│   ├── 📂 routes/
-│   │   ├── forecast.py            # POST /api/forecast
-│   │   ├── anomalies.py           # POST /api/anomalies
-│   │   └── scenario.py            # POST /api/scenario
-│   ├── 📂 services/
-│   │   ├── prophet_service.py     # 🔮 Prophet wrapper
-│   │   ├── anomaly_service.py     # 📉 Z-score detection
-│   │   ├── baseline_service.py    # 📊 Moving average
-│   │   └── gemini_service.py      # 🤖 Gemini integration
-│   ├── 📂 utils/
-│   │   └── csv_parser.py          # CSV validator
-│   ├── 📂 tests/                  # Pytest suite
-│   └── .env.example               # Env template (safe to commit)
-│
-└── 📄 README.md
+┌─────────────────────────────────────────────────────────────────┐
+│  📦 ForecastIQ/                                                 │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │  ⚙️  backend/               Flask 3 Python API           │   │
+│  │                                                          │   │
+│  │  ├── app.py                 App factory + blueprints     │   │
+│  │  ├── config.py              Centralised env var loading  │   │
+│  │  ├── requirements.txt       Python dependencies          │   │
+│  │  ├── demo_sales.csv         52-week synthetic dataset    │   │
+│  │  ├── .env.example           Env template (safe to push)  │   │
+│  │  │                                                       │   │
+│  │  ├── 📂 routes/                                          │   │
+│  │  │   ├── forecast.py        POST /api/forecast           │   │
+│  │  │   ├── anomalies.py       POST /api/anomalies          │   │
+│  │  │   └── scenario.py        POST /api/scenario           │   │
+│  │  │                                                       │   │
+│  │  ├── 📂 services/                                        │   │
+│  │  │   ├── prophet_service.py       Prophet wrapper        │   │
+│  │  │   ├── local_models_service.py  5 models by MAE        │   │
+│  │  │   ├── anomaly_service.py       Z-score detection      │   │
+│  │  │   ├── baseline_service.py      Moving average         │   │
+│  │  │   ├── scenario_engine.py       Rule-based scenarios   │   │
+│  │  │   ├── outlier_service.py       Outlier comparison     │   │
+│  │  │   └── gemini_service.py        AI fallback chain      │   │
+│  │  │                                                       │   │
+│  │  ├── 📂 utils/                                           │   │
+│  │  │   └── csv_parser.py      CSV validation + DataFrame   │   │
+│  │  │                                                       │   │
+│  │  └── 📂 tests/                                           │   │
+│  │      ├── test_anomaly.py    Z-score + severity flags     │   │
+│  │      ├── test_baseline.py   Moving average accuracy      │   │
+│  │      └── test_csv_parser.py Edge cases + validation      │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │  🖥️  frontend/              Next.js 15 TypeScript App    │   │
+│  │                                                          │   │
+│  │  ├── package.json           Node dependencies            │   │
+│  │  ├── next.config.mjs        Next.js config               │   │
+│  │  ├── tsconfig.json          TypeScript config            │   │
+│  │  ├── .env.local.example     Frontend env template        │   │
+│  │  │                                                       │   │
+│  │  ├── 📂 app/                                             │   │
+│  │  │   ├── layout.tsx         Root layout + fonts          │   │
+│  │  │   ├── page.tsx           Public landing page          │   │
+│  │  │   └── 📂 app/            Protected app shell          │   │
+│  │  │       ├── layout.tsx     DataProvider + Sidebar       │   │
+│  │  │       ├── page.tsx       📈 Forecast tab              │   │
+│  │  │       ├── anomalies/     🚨 Anomaly detection tab     │   │
+│  │  │       ├── scenario/      💬 Scenario chat tab         │   │
+│  │  │       └── upload/        📂 CSV upload page           │   │
+│  │  │                                                       │   │
+│  │  ├── 📂 components/forecastiq/                           │   │
+│  │  │   ├── 📂 charts/                                      │   │
+│  │  │   │   ├── forecast-chart.tsx   Actuals + CI bands     │   │
+│  │  │   │   ├── anomaly-chart.tsx    Rolling band + flags   │   │
+│  │  │   │   └── scenario-chart.tsx   Baseline vs scenario   │   │
+│  │  │   ├── anomaly-card.tsx   Severity + cause + action    │   │
+│  │  │   ├── csv-upload.tsx     Drag-and-drop + columns      │   │
+│  │  │   ├── data-summary.tsx   Forecast data table          │   │
+│  │  │   ├── insight-card.tsx   AI insight display           │   │
+│  │  │   ├── scenario-chat.tsx  Multi-turn chat interface    │   │
+│  │  │   ├── stat-card.tsx      KPI metric cards             │   │
+│  │  │   ├── voice-button.tsx   ⚠️ UI placeholder only       │   │
+│  │  │   ├── app-sidebar.tsx    Desktop navigation           │   │
+│  │  │   ├── app-topbar.tsx     Header + Run Analysis btn    │   │
+│  │  │   └── mobile-nav.tsx     Bottom mobile nav            │   │
+│  │  │                                                       │   │
+│  │  ├── 📂 context/                                         │   │
+│  │  │   └── DataContext.tsx    Global state + API results   │   │
+│  │  │                                                       │   │
+│  │  └── 📂 lib/                                             │   │
+│  │      ├── api.ts             All Flask fetch calls        │   │
+│  │      ├── demo-data.ts       Fallback demo dataset        │   │
+│  │      └── utils.ts           Tailwind cn() utility        │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## 🚀 Get It Running
 
-### 📋 Before You Start
+### 📋 Prerequisites
 
 <table>
 <tr>
@@ -277,13 +631,27 @@ Business analysts, ops teams, PMs, founders — anyone who needs real forecastin
 <td>Optional</td>
 <td>Free at <a href="https://aistudio.google.com/app/apikey">aistudio.google.com</a> — app works without it</td>
 </tr>
+<tr>
+<td>🔑 Groq API Key</td>
+<td>Optional</td>
+<td>Free at <a href="https://console.groq.com">console.groq.com</a> — secondary AI fallback</td>
+</tr>
 </table>
 
-> 💡 **No Gemini key?** Prophet forecasting and anomaly detection run **100% locally**. AI insights gracefully fall back to rule-based text.
+> 💡 **No AI keys?** Prophet forecasting and anomaly detection run **100% locally**. AI insights gracefully fall back to rule-based text — the app always produces output.
 
 ---
 
-### 1️⃣ Backend Setup
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/HimaniMahajan27/ForecastIQ.git
+cd ForecastIQ
+```
+
+---
+
+### 2️⃣ Backend Setup
 
 ```bash
 cd backend
@@ -298,7 +666,7 @@ pip install -r requirements.txt
 
 # Set up environment
 cp .env.example .env
-# Add your GEMINI_API_KEY inside .env
+# Add your GEMINI_API_KEY and/or GROQ_API_KEY inside .env
 
 # Fire it up 🔥
 python app.py
@@ -313,7 +681,7 @@ curl http://localhost:5000/health
 
 ---
 
-### 2️⃣ Frontend Setup
+### 3️⃣ Frontend Setup
 
 ```bash
 cd frontend
@@ -334,7 +702,7 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 
 ---
 
-### 3️⃣ Using The App
+### 4️⃣ Using The App
 
 <table>
 <tr>
@@ -343,19 +711,27 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 </tr>
 <tr>
 <td>🏠 Landing Page</td>
-<td>Hit <b>"Get Started"</b> or go straight to <code>/app</code></td>
+<td>Hit <b>"Get Started"</b> or navigate directly to <code>/app</code></td>
 </tr>
 <tr>
 <td>🧪 Demo Mode</td>
-<td>App loads <code>demo_sales.csv</code> automatically — click <b>Run Analysis</b> on any tab</td>
+<td>App auto-loads <code>demo_sales.csv</code> — click <b>Run Analysis</b> on any tab to see it work</td>
 </tr>
 <tr>
 <td>📂 Your Data</td>
-<td>Go to <code>/app/upload</code> → drag CSV → select columns → click <b>Use this data</b></td>
+<td>Go to <code>/app/upload</code> → drag your CSV → select columns → click <b>Use this data</b></td>
 </tr>
 <tr>
-<td>💬 Scenarios</td>
-<td>Ask <em>"What if I run a 20% marketing push for 2 weeks?"</em> on the Scenario tab</td>
+<td>📈 Forecast Tab</td>
+<td>Click <b>Run Analysis</b> — see the Prophet chart, KPI cards, AI insight, and transparency panel</td>
+</tr>
+<tr>
+<td>🚨 Anomalies Tab</td>
+<td>Click <b>Run Analysis</b> — flagged spikes and dips appear with severity + cause + action</td>
+</tr>
+<tr>
+<td>💬 Scenarios Tab</td>
+<td>Ask <em>"What if demand drops 15%?"</em> — get a modelled response with a comparison chart</td>
 </tr>
 </table>
 
@@ -364,6 +740,18 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 ## 📡 API Reference
 
 > All endpoints at `http://localhost:5000`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Health check → `{"status":"ok","version":"1.0.0"}` |
+| `POST` | `/api/forecast` | Run Prophet forecast; auto-falls back to best local model |
+| `POST` | `/api/forecast/compare-cleaned` | Rerun forecast with outliers removed for comparison |
+| `POST` | `/api/anomalies` | Rolling z-score anomaly detection with AI explanations |
+| `POST` | `/api/scenario` | What-if scenario modelling with deterministic engine + AI summary |
+
+All POST endpoints accept `"use_demo": true` to skip uploaded data and use the bundled demo dataset.
+
+---
 
 <details>
 <summary><b>🟢 GET /health — Health Check</b></summary>
@@ -395,8 +783,10 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
     "historical": [{ "date": "2024-01-01", "value": 3500, "baseline": 3450 }],
     "forecast": [{ "date": "2024-02-05", "yhat": 4100, "yhat_lower": 3800, "yhat_upper": 4400 }],
     "summary": { "trend_pct": 8.5, "peak_week": "Week 3", "confidence_range": 600, "vs_baseline_pct": 5.2 },
-    "insight": "Your sales are forecast to grow 8.5% over the next 4 weeks..."
-  }
+    "insight": "Sales are forecast to grow 8.5% over the next 4 weeks, with a seasonal spike expected in Week 3.",
+    "transparency": { "model_used": "Prophet", "local_meta": {} }
+  },
+  "error": null
 }
 ```
 </details>
@@ -407,7 +797,7 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 **Request:**
 ```json
 {
-  "data": ["..."],
+  "data": [{"date": "2024-01-01", "value": "3500"}],
   "date_column": "date",
   "value_column": "value",
   "use_demo": false
@@ -419,10 +809,11 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 {
   "success": true,
   "data": {
-    "chart_data": [{ "date": "...", "value": 3500, "rollingMean": 3400, "isAnomaly": false }],
-    "anomalies": [{ "date": "2024-04-15", "value": 6200, "severity": "HIGH", "deviation": 3.8 }],
-    "stats": { "total": 3, "high": 1, "medium": 2 }
-  }
+    "chart_data": [{ "date": "2024-04-15", "value": 6200, "rollingMean": 3500, "upperBand": 4900, "lowerBand": 2100, "isAnomaly": true, "anomalySeverity": "HIGH", "deviation": 3.8 }],
+    "anomalies": [{ "date": "2024-04-15", "value": 6200, "severity": "HIGH", "deviation": 3.8, "cause": "Spike likely driven by a promotional event or data entry error.", "action": "Cross-check against campaign calendar and verify source data." }],
+    "stats": { "total": 1, "high": 1, "medium": 0 }
+  },
+  "error": null
 }
 ```
 </details>
@@ -433,9 +824,9 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
 **Request:**
 ```json
 {
-  "question": "What if I run a 20% discount for 2 weeks?",
-  "baseline_forecast": [{ "date": "...", "yhat": 4100 }],
-  "history": [{ "role": "user", "content": "..." }],
+  "question": "What if I run a 20% marketing push for 2 weeks?",
+  "baseline_forecast": [{ "date": "2024-02-05", "yhat": 4100 }],
+  "history": [],
   "use_demo": false
 }
 ```
@@ -446,9 +837,10 @@ Open **[http://localhost:3000](http://localhost:3000)** and you're in. 🎉
   "success": true,
   "data": {
     "scenario_data": [{ "week": "Week 1", "baseline": 4100, "scenario": 4920 }],
-    "summary": "The 20% discount is projected to increase units by 2,800 over 4 weeks...",
+    "summary": "A 20% marketing push is projected to add ~2,800 units over 4 weeks vs. the baseline of 15,900.",
     "delta": 2800
-  }
+  },
+  "error": null
 }
 ```
 </details>
@@ -555,15 +947,39 @@ date,sales
 
 ---
 
+## 🧪 Running Tests
+
+```bash
+cd backend
+source venv/bin/activate   # if not already active
+
+# Run all tests
+pytest tests/ -v
+
+# Run individual test files
+pytest tests/test_anomaly.py -v
+pytest tests/test_baseline.py -v
+pytest tests/test_csv_parser.py -v
+```
+
+**Test coverage:**
+
+- `test_anomaly.py` — z-score threshold correctness, HIGH/MEDIUM severity flags, shift correction (no look-ahead), rolling band computation, std=0 edge case
+- `test_baseline.py` — 4-week moving average accuracy, alignment with forecast dates, short-series handling
+- `test_csv_parser.py` — missing column detection, non-numeric value rejection, unparseable dates, minimum 8-row enforcement, duplicate date removal, null row dropping
+
+---
+
 ## ⚠️ Known Limitations
 
 > Honest about what's not done — because integrity > hype.
 
-- 📊 **Scenario chart** — returns text analysis only; visual side-by-side chart not yet implemented
-- 📏 **Min data** — fewer than 8 valid rows will be rejected
-- ⏱️ **Frequency** — hourly / sub-daily data not supported yet
-- 🪟 **Windows Prophet** — may need [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) to install
-- 🌐 **No persistence** — session-based only, no user accounts or saved history
+- 🎙️ **Voice input** — the `VoiceButton` component renders in the Scenario tab but speech-to-text is not wired to the chat input. It is a UI placeholder only.
+- 📏 **Min data** — fewer than 8 valid rows will be rejected by the parser.
+- ⏱️ **Frequency** — hourly / sub-daily data is not supported yet.
+- 🪟 **Windows + Prophet** — may need [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) to install Prophet.
+- 🌐 **No persistence** — session-based only; no saved forecast history across page reloads.
+- 📄 **CSV only** — `.xlsx`, JSON, and database connections are not supported.
 
 ---
 
@@ -576,6 +992,7 @@ date,sales
 |---|---|
 | `ModuleNotFoundError: prophet` | `pip install prophet` — on Apple Silicon: `brew install cmake` first |
 | `ModuleNotFoundError: google.generativeai` | `pip install google-generativeai==0.7.2` |
+| `ModuleNotFoundError: groq` | `pip install groq==0.9.0` |
 | Port 5000 in use | Change `port=5000` in `app.py` and update `NEXT_PUBLIC_API_URL` |
 
 </details>
@@ -585,7 +1002,7 @@ date,sales
 
 | ❌ Error | ✅ Fix |
 |---|---|
-| `Cannot find module '@/context/DataContext'` | Ensure `frontend/context/DataContext.tsx` exists |
+| `Cannot find module '@/context/DataContext'` | Confirm `frontend/context/DataContext.tsx` exists after cloning |
 | `Network Error` / CORS in console | Check `FRONTEND_URL` in `backend/.env` exactly matches Next.js URL + port |
 
 </details>
@@ -595,9 +1012,9 @@ date,sales
 
 | ❌ Message | ✅ Fix |
 |---|---|
-| `"Only N valid rows found"` | CSV has fewer than 8 clean rows — check blanks, bad dates |
-| `"Date column 'X' not found"` | Use the Upload column selector to pick the right columns |
-| Gemini errors | Falls back to rule-based text automatically — set `GEMINI_API_KEY` for full AI |
+| `"Only N valid rows found"` | CSV has fewer than 8 clean rows — check blanks, bad dates, non-numeric values |
+| `"Date column 'X' not found"` | Use the Upload column selector to pick the correct column names |
+| Gemini errors in backend logs | App falls back to Groq then rule-based text automatically — set `GEMINI_API_KEY` for full AI |
 
 </details>
 
@@ -615,7 +1032,22 @@ npm run build
 npm start
 ```
 
-> 🔒 Set `FRONTEND_URL` to your prod domain. Generate a strong `FLASK_SECRET_KEY`. Never ship `.env`.
+**Pre-deployment checklist:**
+
+```bash
+# Generate a strong Flask secret key
+python -c "import secrets; print(secrets.token_hex(32))"
+
+# Update backend/.env
+FLASK_ENV=production
+FLASK_SECRET_KEY=<generated value>
+FRONTEND_URL=https://your-production-domain.com
+
+# Update frontend/.env.local
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+```
+
+> 🔒 Never ship `.env` or `.env.local`. Both are already listed in their respective `.gitignore` files.
 
 ---
 
@@ -623,11 +1055,22 @@ npm start
 
 > If we had more time, here's what's coming:
 
+- 🎙️ Wire `VoiceButton` to the Web Speech API for hands-free scenario questions
 - 📊 Visual side-by-side scenario comparison charts
 - 📅 Monthly + hourly data frequency support
-- 👤 User accounts with saved forecast history
-- 📧 Real-time anomaly email/Slack alerts
-- 🌍 Multi-dataset comparison across regions
+- 👤 Saved forecast history across sessions
+- 📧 Real-time anomaly email / Slack alerts
+- 📁 Excel (`.xlsx`) and JSON file upload support
+- 🌍 Multi-dataset comparison across regions or products
+- 📥 `/api/forecast/export` endpoint to download results as CSV
+
+---
+
+## 📄 License
+
+Apache License 2.0
+
+All commits are DCO signed-off (`git commit -s`) as required by the NatWest Code for Purpose Hackathon submission guidelines. This project is submitted in a personal capacity and is not official company work.
 
 ---
 
