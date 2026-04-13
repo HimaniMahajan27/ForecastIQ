@@ -18,7 +18,6 @@
 [![Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green?style=flat-square)](LICENSE)
 [![DCO](https://img.shields.io/badge/DCO-signed--off-22c55e?style=flat-square)](https://developercertificate.org/)
 [![NatWest Hackathon](https://img.shields.io/badge/NatWest-Code_for_Purpose_2026-purple?style=flat-square)](https://github.com/HimaniMahajan27/ForecastIQ)
-[![Status](https://img.shields.io/badge/Status-Live_&_Working-brightgreen?style=flat-square)]()
 
 </div>
 
